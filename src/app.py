@@ -64,7 +64,46 @@ def get_favs():
     favoritos = favPlanets.query.all(), favPeople.query.all()
     favoritos_serializados = [favorito.serialize() for favorito in favoritos]
     return jsonify(favoritos_serializados), 200
+
+@app.route('/favorite/planet/<int:id>', methods=['POST'])
+def favoriteplanet(id):
+    planet = Planets.query.get(id)
+    if planet is None: 
+        return jsonify ({"message":"planeta no encontrado"}), 404
+
+    NewFavPlanet = favPlanets (planet_id = id)
+    db.session.add(NewFavPlanet)
+    db.session.commit()
+    return jsonify ({"message":"planeta agregado"}), 200
+
+@app.route('/favorite/people/<int:id>', methods=['POST'])
+def favoritepeople(id):
+    people = People.query.get(id)
+    if people is None: 
+        return jsonify ({"message":"persona no encontrada"}), 404
+
+    NewFavPeople = favPeople (person_id = id)
+    db.session.add(NewFavPeople)
+    db.session.commit()
+    return jsonify ({"message":"persona agregada"}), 200
+
+@app.route('/users/favorites/', methods=['GET'])
+def getFavorites():
+    people = favPeople.query.all()
+    planets = favPlanets.query.all()
+    people_serializados = [person.serialize() for person in people]
+    planets_serializados = [planet.serialize() for planet in planets]
+    return jsonify ({"favorites":[people_serializados, planets_serializados]})
+
+     
+
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=False)
+
+
+
+
+
+

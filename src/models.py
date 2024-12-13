@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
+
 db = SQLAlchemy()
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -49,7 +51,7 @@ class Planets(db.Model):
         }
 class favPeople(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id), unique=False, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), unique=False, nullable=True)
     person_id = db.Column(db.Integer, db.ForeignKey(People.id), unique=False, nullable=False)
     usuario = db.relationship('User')
     people = db.relationship('People')
@@ -58,12 +60,12 @@ class favPeople(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "planet_id": self.person_id
+            "person_id": self.person_id
             # do not serialize the password, its a security breach
         }
 class favPlanets(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id), unique=False, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), unique=False, nullable=True)
     planet_id = db.Column(db.Integer, db.ForeignKey(Planets.id), unique=False, nullable=False)
     usuario = db.relationship('User')
     planet = db.relationship('Planets')
@@ -75,54 +77,3 @@ class favPlanets(db.Model):
             "planet_id": self.planet_id
             # do not serialize the password, its a security breach
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
